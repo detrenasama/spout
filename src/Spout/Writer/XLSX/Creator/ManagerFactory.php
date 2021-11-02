@@ -46,6 +46,7 @@ class ManagerFactory implements ManagerFactoryInterface
         $workbook = $this->entityFactory->createWorkbook();
 
         $fileSystemHelper = $this->helperFactory->createSpecificFileSystemHelper($optionsManager, $this->entityFactory);
+        $fileSystemHelper->setTempFolderIsRoot($optionsManager->getOption(Options::TEMP_FOLDER_IS_ROOT));
         $fileSystemHelper->createBaseFilesAndFolders();
 
         $xlFolder = $fileSystemHelper->getXlFolder();

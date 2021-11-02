@@ -53,6 +53,8 @@ class FileSystemHelper extends \Box\Spout\Common\Helper\FileSystemHelper impleme
     /** @var string Path to the "worksheets" folder inside the "xl" folder */
     private $xlWorksheetsFolder;
 
+    private $tempFolderIsRoot = false;
+
     /**
      * @param string $baseFolderPath The path of the base folder where all the I/O can occur
      * @param ZipHelper $zipHelper Helper to perform tasks with Zip archive
@@ -63,6 +65,11 @@ class FileSystemHelper extends \Box\Spout\Common\Helper\FileSystemHelper impleme
         parent::__construct($baseFolderPath);
         $this->zipHelper = $zipHelper;
         $this->escaper = $escaper;
+    }
+
+    public function setTempFolderIsRoot($bool)
+    {
+        $this->tempFolderIsRoot = $bool;
     }
 
     /**
@@ -112,8 +119,11 @@ class FileSystemHelper extends \Box\Spout\Common\Helper\FileSystemHelper impleme
      */
     private function createRootFolder()
     {
-        $this->rootFolder = $this->createFolder($this->baseFolderRealPath, \uniqid('xlsx', true));
-
+        if ($this->tempFolderIsRoot) {
+            $this->rootFolder = $this->baseFolderRealPath;
+        } else {
+            $this->rootFolder = $this->createFolder($this->baseFolderRealPath, \uniqid('xlsx', true));
+        }
         return $this;
     }
 

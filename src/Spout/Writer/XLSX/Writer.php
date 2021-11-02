@@ -47,4 +47,13 @@ class Writer extends WriterMultiSheetsAbstract
 
         return $this;
     }
+
+    public function setTempFolderIsRoot($bool)
+    {
+        $this->throwIfWriterAlreadyOpened('Writer must be configured before opening it.');
+
+        $this->optionsManager->setOption(Options::TEMP_FOLDER_IS_ROOT, $bool);
+
+        return $this;
+    }
 }
