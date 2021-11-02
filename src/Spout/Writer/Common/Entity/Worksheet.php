@@ -38,6 +38,11 @@ class Worksheet
         $this->lastWrittenRowIndex = 0;
     }
 
+    public function __wakeup()
+    {
+        $this->filePointer = \fopen($this->filePath, 'ab+');
+    }
+
     /**
      * @return string
      */

@@ -72,6 +72,16 @@ abstract class WriterMultiSheetsAbstract extends WriterAbstract
         }
     }
 
+    public function setWorkbookManager(WorkbookManagerInterface $workbookManager)
+    {
+        $this->workbookManager = $workbookManager;
+    }
+
+    public function getWorkbookManager(): WorkbookManagerInterface
+    {
+        return $this->workbookManager;
+    }
+
     /**
      * Returns all the workbook's sheets
      *
