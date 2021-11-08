@@ -19,7 +19,7 @@ class SheetManager
     private static $INVALID_CHARACTERS_IN_SHEET_NAME = ['\\', '/', '?', '*', ':', '[', ']'];
 
     /** @var array Associative array [WORKBOOK_ID] => [[SHEET_INDEX] => [SHEET_NAME]] keeping track of sheets' name to enforce uniqueness per workbook */
-    private static $SHEETS_NAME_USED = [];
+    private $sheetNameUsed = [];
 
     /** @var StringHelper */
     private $stringHelper;
@@ -116,7 +116,7 @@ class SheetManager
      */
     private function isNameUnique($name, Sheet $sheet)
     {
-        foreach (self::$SHEETS_NAME_USED[$sheet->getAssociatedWorkbookId()] as $sheetIndex => $sheetName) {
+        foreach ($this->sheetNameUsed[$sheet->getAssociatedWorkbookId()] as $sheetIndex => $sheetName) {
             if ($sheetIndex !== $sheet->getIndex() && $sheetName === $name) {
                 return false;
             }
@@ -131,8 +131,8 @@ class SheetManager
      */
     public function markWorkbookIdAsUsed($workbookId)
     {
-        if (!isset(self::$SHEETS_NAME_USED[$workbookId])) {
-            self::$SHEETS_NAME_USED[$workbookId] = [];
+        if (!isset($this->sheetNameUsed[$workbookId])) {
+            $this->sheetNameUsed[$workbookId] = [];
         }
     }
 
@@ -142,6 +142,6 @@ class SheetManager
      */
     public function markSheetNameAsUsed(Sheet $sheet)
     {
-        self::$SHEETS_NAME_USED[$sheet->getAssociatedWorkbookId()][$sheet->getIndex()] = $sheet->getName();
+        $this->sheetNameUsed[$sheet->getAssociatedWorkbookId()][$sheet->getIndex()] = $sheet->getName();
     }
 }
