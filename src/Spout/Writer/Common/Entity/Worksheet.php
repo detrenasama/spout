@@ -23,6 +23,9 @@ class Worksheet
     /** @var int Index of the last written row */
     private $lastWrittenRowIndex;
 
+    /** @var bool has the sheet data header been written */
+    private $sheetDataStarted = false;
+
     /**
      * Worksheet constructor.
      *
@@ -36,6 +39,7 @@ class Worksheet
         $this->externalSheet = $externalSheet;
         $this->maxNumColumns = 0;
         $this->lastWrittenRowIndex = 0;
+        $this->sheetDataStarted = false;
     }
 
     public function __wakeup()
@@ -114,5 +118,21 @@ class Worksheet
     {
         // sheet index is zero-based, while ID is 1-based
         return $this->externalSheet->getIndex() + 1;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getSheetDataStarted()
+    {
+        return $this->sheetDataStarted;
+    }
+
+    /**
+     * @param bool $sheetDataStarted
+     */
+    public function setSheetDataStarted($sheetDataStarted)
+    {
+        $this->sheetDataStarted = $sheetDataStarted;
     }
 }
