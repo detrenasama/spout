@@ -24,6 +24,10 @@ EOD;
      */
     const DEFAULT_STRINGS_COUNT_PART = 'count="9999999999999" uniqueCount="9999999999999"';
 
+
+    /** @var string */
+    protected $sharedStringsFilePath;
+
     /** @var resource Pointer to the sharedStrings.xml file */
     protected $sharedStringsFilePointer;
 
@@ -39,9 +43,9 @@ EOD;
      */
     public function __construct($xlFolder, $stringsEscaper)
     {
-        $sharedStringsFilePath = $xlFolder . '/' . self::SHARED_STRINGS_FILE_NAME;
-        $this->sharedStringsFilePointer = \fopen($sharedStringsFilePath, 'w');
-
+        $this->sharedStringsFilePath = $xlFolder . '/' . self::SHARED_STRINGS_FILE_NAME;
+        \touch($this->sharedStringsFilePath);
+        $this->sharedStringsFilePointer = \fopen($this->sharedStringsFilePath, 'r+');
         $this->throwIfSharedStringsFilePointerIsNotAvailable();
 
         // the headers is split into different parts so that we can fseek and put in the correct count and uniqueCount later
@@ -49,6 +53,13 @@ EOD;
         \fwrite($this->sharedStringsFilePointer, $header);
 
         $this->stringsEscaper = $stringsEscaper;
+    }
+
+    public function __wakeup()
+    {
+        $this->sharedStringsFilePointer = \fopen($this->sharedStringsFilePath, 'r+');
+        $this->throwIfSharedStringsFilePointerIsNotAvailable();
+        \fseek($this->sharedStringsFilePointer, 0, SEEK_END);
     }
 
     /**
